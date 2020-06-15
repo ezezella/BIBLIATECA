@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1590786414 source:c:\users\eze\google drive\progra\biblioteca completa\biblioteca\main.c
+	"Funciones.h"
+
+1590781322 c:\users\eze\google drive\progra\biblioteca completa\biblioteca\funciones.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<math.h>
+
+1590797844 source:c:\users\eze\google drive\progra\biblioteca completa\biblioteca\funciones.c
+	"Funciones.h"
+
