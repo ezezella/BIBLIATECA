@@ -1295,37 +1295,37 @@ void vaciarPila_est(t_pila_est *p)
 ///----------------------------- P I L A   D I N A M I C A ----------------------------------
 
 
-void crearPila(t_pila *p)
+void crearPila_din(t_pila *p)
 {
     *p = NULL;
 }
 
 //////////////////////////////////////////////
 
-int	pilaLlena(const t_pila *p, unsigned cantBytes)
-{
-    t_nodo_pila	*aux = (t_nodo_pila *)malloc(sizeof(t_nodo_pila));
-    void	*info = malloc(cantBytes);
-
-    free(aux);
-    free(info);
-    return aux == NULL || info == NULL;
-}
+//int	pilaLlena_din(const t_pila *p, unsigned cantBytes)
+//{
+//    tNodo	*aux = (tNodo *)malloc(sizeof(tNodo));
+//    void	*info = malloc(cantBytes);
+//
+//    free(aux);
+//    free(info);
+//    return aux == NULL || info == NULL;
+//}
 
 //////////////////////////////////////////////
 
-int	ponerEnPila(t_pila *p, const void *d, unsigned cantBytes)
+int	ponerEnPila_din(t_pila *p, const void *d, unsigned cantBytes)
 {
-    t_nodo_pila *nue;
+    tNodo *nue;
 
-    if((nue = (t_nodo_pila *)malloc(sizeof(t_nodo_pila))) == NULL ||
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL ||
             (nue->info = malloc(cantBytes)) == NULL)
     {
         free(nue);
         return 0;
     }
     memcpy(nue->info, d, cantBytes);
-    nue->taminfo = cantBytes;
+    nue->tamInfo = cantBytes;
     nue->sig = *p;
     *p = nue;
     return 1;
@@ -1333,31 +1333,31 @@ int	ponerEnPila(t_pila *p, const void *d, unsigned cantBytes)
 
 //////////////////////////////////////////////
 
-int	verTope(const t_pila *p, void *d, unsigned cantBytes)
+int	verTope_din(const t_pila *p, void *d, unsigned cantBytes)
 {
     if(*p == NULL)
         return 0;
-    memcpy(d, (*p)->info, MINIMO(cantBytes, (*p)->taminfo));
+    memcpy(d, (*p)->info, MINIMO(cantBytes, (*p)->tamInfo));
     return 1;
 }
 
 //////////////////////////////////////////////
 
-int	pilaVacia(const t_pila *p)
+int	pilaVacia_din(const t_pila *p)
 {
     return *p == NULL;
 }
 
 //////////////////////////////////////////////
 
-int	sacarDePila(t_pila *p, void *d, unsigned cantBytes)
+int	sacarDePila_din(t_pila *p, void *d, unsigned cantBytes)
 {
-    t_nodo_pila *aux = *p;
+    tNodo *aux = *p;
 
     if(aux == NULL)
         return 0;
     *p = aux->sig;
-    memcpy(d, aux->info, MINIMO(cantBytes, aux->taminfo));
+    memcpy(d, aux->info, MINIMO(cantBytes, aux->tamInfo));
     free(aux->info);
     free(aux);
     return 1;
@@ -1365,11 +1365,11 @@ int	sacarDePila(t_pila *p, void *d, unsigned cantBytes)
 
 //////////////////////////////////////////////
 
-void vaciarPila(t_pila *p)
+void vaciarPila_din(t_pila *p)
 {
     while(*p)
     {
-        t_nodo_pila *aux = *p;
+        tNodo *aux = *p;
 
         *p = aux->sig;
         free(aux->info);
@@ -1487,7 +1487,7 @@ void crearCola_din(t_cola *p)
 
 int colaLlena_din(const t_cola *p, unsigned cantBytes)
 {
-    t_nodo_cola *aux = (t_nodo_cola *)malloc(sizeof(t_nodo_cola));
+    tNodo *aux = (tNodo *)malloc(sizeof(tNodo));
     void	*info = malloc(cantBytes);
     free(aux);
     free(info);
@@ -1498,7 +1498,7 @@ int colaLlena_din(const t_cola *p, unsigned cantBytes)
 
 int ponerEnCola_din(t_cola *p, const void *d, unsigned cantBytes)
 {
-    t_nodo_cola *nue = (t_nodo_cola *) malloc(sizeof(t_nodo_cola));
+    tNodo *nue = (tNodo *) malloc(sizeof(tNodo));
     if(nue == NULL || (nue->info = malloc(cantBytes)) == NULL)
     {
         free(nue);
@@ -1536,7 +1536,7 @@ int	colaVacia_din(const t_cola *p)
 
 int	sacarDeCola_din(t_cola *p, void *d, unsigned cantBytes)
 {
-    t_nodo_cola *aux = p->pri;
+    tNodo *aux = p->pri;
     if(aux == NULL)
         return 0;
     p->pri = aux->sig;
@@ -1554,7 +1554,7 @@ void vaciarCola_din(t_cola *p)
 {
     while(p->pri)
     {
-        t_nodo_cola *aux = p->pri;
+        tNodo *aux = p->pri;
         p->pri = aux->sig;
         free(aux->info);
         free(aux);
@@ -1563,7 +1563,7 @@ void vaciarCola_din(t_cola *p)
 }
 
 
-///----------------------------- L I S T A   D I N A M I C A ---------------------------------- NO ESTA COMPROBADO Q ESTE BIEN
+///----------------------------- L I S T A   D I N A M I C A ----------------------------------
 
 
 void crearlista(t_lista* l)
@@ -1580,14 +1580,14 @@ int listaVacia(const t_lista* l)
 
 ////////////////////////////////////////////////
 
-int listaLlena(const t_lista *l, unsigned cantBytes)
-{
-    t_nodo_lista *aux = (t_nodo_lista *)malloc(sizeof(t_nodo_lista));
-    void *info = malloc(cantBytes);
-    free(aux);
-    free(info);
-    return aux == NULL || info == NULL;
-}
+//int listaLlena(const t_lista *l, unsigned cantBytes)
+//{
+//    tNodo *aux = (tNodo *)malloc(sizeof(tNodo));
+//    void *info = malloc(cantBytes);
+//    free(aux);
+//    free(info);
+//    return aux == NULL || info == NULL;
+//}
 
 ////////////////////////////////////////////////
 
@@ -1595,7 +1595,7 @@ void vaciarLista(t_lista *l)
 {
     while(*l)
     {
-        t_nodo_lista *aux = *l;
+        tNodo *aux = *l;
         *l = aux->sig;
         free(aux->info);
         free(aux);
@@ -1606,8 +1606,8 @@ void vaciarLista(t_lista *l)
 
 int ponerAlComienzo(t_lista *l, const void *d, unsigned cantBytes)
 {
-    t_nodo_lista *nue;
-    if((nue = (t_nodo_lista *)malloc(sizeof(t_nodo_lista))) == NULL ||(nue->info = malloc(cantBytes)) == NULL)
+    tNodo *nue;
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL ||(nue->info = malloc(cantBytes)) == NULL)
     {
         free(nue);
         return 0;
@@ -1623,7 +1623,7 @@ int ponerAlComienzo(t_lista *l, const void *d, unsigned cantBytes)
 
 int sacarPrimeroLista(t_lista *l, void *d, unsigned cantBytes)
 {
-    t_nodo_lista *aux = *l;
+    tNodo *aux = *l;
     if(aux == NULL)
         return 0;
     *l = aux->sig;
@@ -1647,10 +1647,10 @@ int verPrimeroLista(const t_lista *p, void *d, unsigned cantBytes)
 
 int ponerAlFinal(t_lista *l, const void *d, unsigned cantBytes)
 {
-    t_nodo_lista *nue;
+    tNodo *nue;
     while(*l)
         l = &(*l)->sig;
-    if((nue = (t_nodo_lista *)malloc(sizeof(t_nodo_lista))) == NULL || (nue->info = malloc(cantBytes)) == NULL)
+    if((nue = (tNodo *)malloc(sizeof(tNodo))) == NULL || (nue->info = malloc(cantBytes)) == NULL)
     {
         free(nue);
         return 0;
@@ -1693,7 +1693,7 @@ int verUltimoLista(const t_lista *l, void *d, unsigned cantBytes)
 
 int	ponerEnOrden(t_lista *p, const void *d, unsigned cantBytes,int (*comparar)(const void *, const void *),int (*acumular)(void **, unsigned *, const void *,	unsigned))
 {
-    t_nodo_lista	*nue;
+    tNodo	*nue;
     while(*p && comparar((*p)->info, d) < 0)
         p = &(*p)->sig;
     if(*p && comparar((*p)->info, d) == 0)
@@ -1703,7 +1703,7 @@ int	ponerEnOrden(t_lista *p, const void *d, unsigned cantBytes,int (*comparar)(c
                 return SIN_MEMORIA;
         return DUPLICADO;//CLA_DUP
     }
-    if((nue = (t_nodo_lista	*)malloc(sizeof(t_nodo_lista))) == NULL ||(nue->info = malloc(cantBytes)) == NULL)
+    if((nue = (tNodo	*)malloc(sizeof(tNodo))) == NULL ||(nue->info = malloc(cantBytes)) == NULL)
     {
         free(nue);
         return SIN_MEMORIA;
@@ -1727,7 +1727,7 @@ void ordenar(t_lista *p, int (*comparar)(const void *, const void *))
         if(comparar((*p)->info, (*p)->sig->info) > 0)
         {
             t_lista *q = pri;
-            t_nodo_lista *aux = (*p)->sig;
+            tNodo *aux = (*p)->sig;
             (*p)->sig = aux->sig;
             while(comparar((*q)->info, aux->info) > 0)
                 q = &(*q)->sig;
@@ -1739,3 +1739,195 @@ void ordenar(t_lista *p, int (*comparar)(const void *, const void *))
     }
 }
 
+
+///----------------------------- P I L A   C I R C U L A R ----------------------------------
+
+
+void crear_pila_cir(tPila *p)
+{
+    *p=NULL;
+}
+
+////////////////////////////////////////////////
+
+int poner_en_pila_cir(tPila*p,const void*d,unsigned cantBytes)
+{
+    tNodo *nue=(tNodo*)malloc(sizeof(tNodo));
+    nue->info=malloc(cantBytes);
+    if(nue==NULL||nue->info==NULL)
+    {
+        free(nue);
+        return PILA_LLENA;
+    }
+    memcpy(nue->info,d,cantBytes);
+    nue->tamInfo=cantBytes;
+    if(*p==NULL)
+    {
+        *p=nue;
+        nue->sig=nue;
+    }else
+    {
+        nue->sig=(*p)->sig;
+        (*p)->sig=nue;
+    }
+    return TODO_OK;
+}
+
+////////////////////////////////////////////////
+
+int sacar_de_pila_cir(tPila*p ,void*d ,unsigned cantBytes)
+{
+    tNodo* elim;
+    if(!*p)
+        return PILA_VACIA;
+    elim=(*p)->sig;
+    memcpy(d,elim->info,MINIMO(cantBytes,elim->tamInfo));
+    if(elim==*p)
+        *p=NULL;
+    else
+        (*p)->sig=elim->sig;
+    free(elim->info);
+    free(elim);
+    return TODO_OK;
+}
+
+////////////////////////////////////////////////
+
+int ver_tope_cir(const tPila*p, void*d, unsigned cantBytes)
+{
+    if(!*p)
+        return PILA_VACIA;
+    memcpy(d,(*p)->sig->info,MINIMO(cantBytes,(*p)->sig->tamInfo));
+    return TODO_OK;
+}
+
+int pila_vacia_cir(const tPila*p)
+{
+    return *p == NULL;
+}
+
+////////////////////////////////////////////////
+
+//int pila_llena_cir(const tPila*p,unsigned cantBytes)
+//{
+//    tNodo*nue=(tNodo*)malloc(sizeof(tNodo));
+//    nue->info=malloc(cantBytes);
+//    free(nue->info);
+//    free(nue);
+//    return nue == NULL || nue->info == NULL;
+//}
+
+////////////////////////////////////////////////
+
+void vaciar_pila_cir(tPila*p)
+{
+    while(*p)
+    {
+        tNodo* elim=(*p)->sig;
+        if(elim!=*p)
+        (*p)->sig=elim->sig;
+        else
+            *p=NULL;
+        free(elim->info);
+        free(elim);
+    }
+}
+
+
+///----------------------------- P I L A   C I R C U L A R ----------------------------------
+
+
+void crearCola_cir(tCola *pc)
+{
+    *pc = NULL;
+}
+
+////////////////////////////////////////////////
+
+int cola_vacia_cir(const tCola *pc)
+{
+    return *pc == NULL;
+}
+
+////////////////////////////////////////////////
+
+//int cola_llena_cir(const tCola *pc, unsigned tamInfo)
+//{
+//    tNodo *nue;
+//    nue = (tNodo*) malloc(sizeof(tNodo));
+//    void *info = malloc(tamInfo);
+//    free(info);
+//    free(nue);
+//    return nue==NULL || nue->info == NULL;
+//}
+
+////////////////////////////////////////////////
+
+int poner_en_cola_cir(tCola *pc, const void *info, unsigned tamInfo)
+{
+    tNodo *nue;
+    if((nue = (tNodo*)malloc(sizeof(tNodo))) == NULL ||
+              (nue->info = malloc(tamInfo)) == NULL)
+    {
+        free(nue);
+        return COLA_LLENA;
+    }
+    memcpy(nue->info,info,tamInfo);
+    nue->tamInfo = tamInfo;
+    if(*pc == NULL)
+        nue->sig=nue;
+        else
+        {
+            nue->sig=(*pc)->sig;
+            (*pc)->sig=nue;
+        }
+    *pc = nue;
+    return TODO_OK;
+}
+
+////////////////////////////////////////////////
+
+int sacar_de_cola_cir(tCola *pc, void *info, unsigned tamInfo)
+{
+    tNodo* elim;
+    if(*pc==NULL)
+        return COLA_VACIA;
+    elim=(*pc)->sig;
+    memcpy(info,elim->info,MINIMO(tamInfo,elim->tamInfo));
+    if(elim==(*pc))
+        *pc=NULL;
+    else
+        (*pc)->sig=elim->sig;
+    free(elim->info);
+    free(elim);
+    return TODO_OK;
+}
+
+////////////////////////////////////////////////
+
+void vaciar_cola_cir(tCola *pc)
+{
+    while(*pc)
+    {
+        tNodo* elim=(*pc)->sig;
+        if(elim==*pc)
+            *pc=NULL;
+        else
+            (*pc)->sig=elim->sig;
+        free(elim->info);
+        free(elim);
+    }
+}
+
+////////////////////////////////////////////////
+
+int ver_primero_cir(const tCola *pc, void *info, unsigned tamInfo)
+{
+    if(*pc==NULL)
+        return COLA_VACIA;
+    memcpy(info,(*pc)->sig->info,MINIMO(tamInfo,(*pc)->sig->tamInfo));
+    return TODO_OK;
+}
+
+
+///----------------------------- L I S T A   D O B L E ----------------------------------

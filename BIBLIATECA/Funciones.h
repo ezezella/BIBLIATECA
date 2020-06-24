@@ -82,6 +82,13 @@ typedef struct
 
 typedef int (*Cmp) (const void*, const void*);
 
+typedef struct sNodo
+{
+    void* info;
+    unsigned tamInfo;
+    struct sNodo *sig;
+}tNodo;
+
 ///--------------------- O T R O S ---------------------
 
 int cmp (const void* e1, const void* e2);
@@ -109,7 +116,6 @@ int AumentaSueldos(const char* arch1,const char* arch2);///arch1 = alumno    arc
 ///--------------------- A R C H I V O S   D E  T E X T O ---------------------
 
 int ofuscado();
-
 
 ///--------------------- F E C H A ---------------------
 
@@ -187,17 +193,10 @@ void vaciarPila_est(t_pila_est *p);
 
 ///--------------------- P I L A   D I N A M I C A ---------------------
 
-typedef struct s_nodo
-{
-    void* info;
-    unsigned taminfo;
-    struct s_nodo *sig;
-}t_nodo_pila;
-
-typedef t_nodo_pila* t_pila;
+typedef tNodo* t_pila;
 
 void crearPila_din(t_pila *p);
-int	pilaLlena_din(const t_pila *p, unsigned cantBytes);
+//int	pilaLlena_din(const t_pila *p, unsigned cantBytes);
 int	apilar_din(t_pila *p, const void *d, unsigned cantBytes);
 int	verTope_din(const t_pila *p,  void *d, unsigned cantBytes);
 int	pilaVacia_din(const t_pila *p);
@@ -226,21 +225,14 @@ void vaciarCola_est(t_cola_est *p);
 
 ///--------------------- C O L A   D I N A M I C A ---------------------
 
-typedef struct sNodo
-{
-    void	*info;
-    unsigned	tamInfo;
-    struct sNodo	*sig;
-} t_nodo_cola;
-
 typedef struct
 {
-    t_nodo_cola *pri;
-    t_nodo_cola *ult;
-} t_cola;
+    tNodo *pri;
+    tNodo *ult;
+}t_cola;
 
 void crearCola_din(t_cola *p);
-int colaLlena_din(const t_cola *p, unsigned cantBytes);
+//int colaLlena_din(const t_cola *p, unsigned cantBytes);
 int ponerEnCola_din(t_cola *p, const void *d, unsigned cantBytes);
 int	verPrimeroCola_din(const t_cola *p, void *d, unsigned cantBytes);
 int	colaVacia_din(const t_cola *p);
@@ -249,18 +241,11 @@ void vaciarCola_din(t_cola *p);
 
 ///--------------------- L I S T A   D I N A M I C A ---------------------
 
-typedef struct snodo
-{
-    void	*info;
-    unsigned	tamInfo;
-    struct snodo	*sig;
-}t_nodo_lista;
-
-typedef t_nodo_lista *t_lista;
+typedef tNodo *t_lista;
 
 void crearlista(t_lista* l);
 int listaVacia(const t_lista *l);
-int listaLlena(const t_lista *l, unsigned cantBytes);
+//int listaLlena(const t_lista *l, unsigned cantBytes);
 void vaciarLista(t_lista *l);
 int ponerAlComienzo(t_lista *l, const void *d, unsigned cantBytes);
 int sacarPrimeroLista(t_lista *l, void *d, unsigned cantBytes);
@@ -270,4 +255,37 @@ int sacarUltimoLista(t_lista *l, void *d, unsigned cantBytes);
 int verUltimoLista(const t_lista *l, void *d, unsigned cantBytes);
 int	ponerEnOrden(t_lista *p, const void *d, unsigned cantBytes,int (*comparar)(const void *, const void *),int (*acumular)(void **, unsigned *, const void *, unsigned));
 void ordenar(t_lista *p, int (*comparar)(const void *, const void *));
+
+///--------------------- P I L A   C I R C U L A R ---------------------
+
+typedef tNodo* tPila;
+
+void crear_pila_cir(tPila *p);
+int poner_en_pila_cir(tPila*p,const void*d,unsigned cantBytes);
+int sacar_de_pila_cir(tPila*p,void*d,unsigned cantBytes);
+int ver_tope_cir(const tPila*p,void*d,unsigned cantBytes);
+int pila_vacia_cir(const tPila*p);
+//int pila_llena_cir(const tPila*p,unsigned taminfo);
+void vaciar_pila_cir(tPila*p);
+
+///--------------------- C O L A  C I R C U L A R ---------------------
+
+typedef tNodo *tCola;
+
+void crearCola_cir(tCola *pc);
+int poner_en_cola_cir(tCola *pc, const void *info, unsigned tamInfo);
+int sacar_de_cola_cir(tCola *pc, void *info, unsigned tamInfo);
+int cola_vacia_cir(const tCola *pc);
+//int cola_llena(const tCola *pc, unsigned tamInfo);
+void vaciar_cola_cir(tCola *pc);
+int ver_primero_cir(const tCola *pc, void *info, unsigned tamInfo);
+
+///--------------------- L I S T A   C I R C U L A R --------------------- VER
+
+
+
+///--------------------- L I S T A   D O B L E ---------------------
+
+
+
 #endif // FUNCIONES_H_INCLUDED
