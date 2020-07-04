@@ -12,3 +12,16 @@
 1590797844 source:c:\users\eze\google drive\progra\biblioteca completa\biblioteca\funciones.c
 	"Funciones.h"
 
+1593000660 source:c:\users\eze\google drive\progra\biblioteca completa\bibliateca\funciones.c
+	"Funciones.h"
+
+1592950207 c:\users\eze\google drive\progra\biblioteca completa\bibliateca\funciones.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<math.h>
+
+1590950575 source:c:\users\eze\google drive\progra\biblioteca completa\bibliateca\main.c
+	"Funciones.h"
+

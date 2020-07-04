@@ -37,6 +37,7 @@
 #define SI 1
 #define NO 0
 #define CADENA_VACIA 8
+#define SIN_INICIALIZAR 10
 ///-----FUNCIONES EN MACRO-----
 #define MINIMO(x,y) (x<=y)? x:y
 #define MAXIMO(x,y) (x<=y)? y:x
@@ -87,7 +88,7 @@ typedef struct sNodo
     void* info;
     unsigned tamInfo;
     struct sNodo *sig;
-}tNodo;
+} tNodo;
 
 ///--------------------- O T R O S ---------------------
 
@@ -161,8 +162,8 @@ size_t mi_strlen(const char *cad);
 char *mi_strncpy(char *cad_copia, const char *cad_orig, size_t n);
 int mi_strcmp(const char* a,const char* b);
 char *mi_strncat(char *cad_de_enlace, const char *cad_a_enlazar, size_t n);
-char* mi_strchr(char* cad, int c);
-char* mi_strrchr(char* cad, int c);
+char* mi_strchr(const char* cad2, int c);
+char* mi_strrchr(const char* cad2, int c);
 size_t mi_strcspn(const char *cad1, const char *cad2);
 char *mi_strpbrk(char *cad1,char *cad2);
 char *mi_strstr(char *cad1,char *cad2);
@@ -229,7 +230,7 @@ typedef struct
 {
     tNodo *pri;
     tNodo *ult;
-}t_cola;
+} t_cola;
 
 void crearCola_din(t_cola *p);
 //int colaLlena_din(const t_cola *p, unsigned cantBytes);
@@ -287,5 +288,64 @@ int ver_primero_cir(const tCola *pc, void *info, unsigned tamInfo);
 ///--------------------- L I S T A   D O B L E ---------------------
 
 
+
+///--------------------- L I S T A   D O B L E ---------------------
+
+#define reservarMemoriaNodo( X , Y , Z , W ) ((( X ) = (typeof( X ))malloc( Y ) ) == NULL || ((Z) = malloc( W ) ) == NULL ? free( X ), 0 : 1	)
+
+
+typedef struct sNodoArbol
+{
+    void *info;
+    unsigned tamInfo;
+    struct sNodoArbol *izq,
+                      *der;
+}tNodoArbol;
+
+typedef tNodoArbol *tArbolBinBusq;
+
+tNodoArbol **mayorNodoArbolBinBusq(const tArbolBinBusq *p);
+tNodoArbol **menorNodoArbolBinBusq(const tArbolBinBusq *p);
+tNodoArbol **mayorRecNodoArbolBinBusq(const tArbolBinBusq *p);
+tNodoArbol **menorRecNodoArbolBinBusq(const tArbolBinBusq *p);
+tNodoArbol **buscarNodoArbolBinBusq(const tArbolBinBusq *p, const void *d,int (*cmp)(const void *, const void *));
+tNodoArbol **buscarRecNodoArbolBinBusq(const tArbolBinBusq *p, const void *d,int (*cmp)(const void *, const void*));
+int esCompletoHastaNivelArbolBin(const tArbolBinBusq *p, int n);
+int esAVL2CalculoArbolBin(const tArbolBinBusq *p);
+const tArbolBinBusq * mayorNodoNoClaveArbolBinBusq(const tArbolBinBusq *p,	const tArbolBinBusq *mayor,int (*cmp)(const void *, const void *));
+const tArbolBinBusq * menorNodoNoClaveArbolBinBusq(const tArbolBinBusq *p, const tArbolBinBusq *menor,int (*cmp)(const void *, const void *));
+const tArbolBinBusq * buscarNodoNoClaveArbolBinBusq(const tArbolBinBusq *p, const void *d,int (*cmp)(const void *, const void *));
+
+void crearArbolBinBusq(tArbolBinBusq *p);
+int insertarArbolBinBusq(tArbolBinBusq *p, const void *d, unsigned tam,	int (*cmp)(const void *, const void *));
+int insertarRecArbolBinBusq(tArbolBinBusq *p, const void *d, unsigned tam, 	int (*cmp)(const void*, const void *));
+void recorrerEnOrdenArbolBinBusq(const tArbolBinBusq * p, void * params,void (*accion)(void *, unsigned, unsigned, void*));
+void recorrerEnOrdenInversoArbolBinBusq(const tArbolBinBusq * p, void * params, void (*accion)(void *, unsigned, unsigned, void *));
+void recorrerPreOrdenArbolBinBusq(const tArbolBinBusq * p, void * params,void (*accion)(void *, unsigned, unsigned, void*));
+void recorrerPosOrdenArbolBinBusq(const tArbolBinBusq * p, void * params,void (*accion)(void *, unsigned, unsigned, void*));
+void recorrerEnOrdenSimpleArbolBinBusq(const tArbolBinBusq *p, void *params,void (*accion)(void *, unsigned, void *));
+void recorrerPreOrdenSimpleArbolBinBusq(const tArbolBinBusq *p, void *params,void (*accion)(void *, unsigned, void *));
+void recorrerPosOrdenSimpleArbolBinBusq(const tArbolBinBusq *p, void *params,void (*accion)(void *, unsigned, void *));
+int eliminarRaizArbolBinBusq(tArbolBinBusq *p);
+int eliminarElemArbolBinBusq(tArbolBinBusq *p, void *d, unsigned tam, int (*cmp)(const void *, const void *));
+int buscarElemArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam, int (*cmp)(const void *, const void *));
+int cargarArchivoBinOrdenadoAbiertoArbolBinBusq(tArbolBinBusq *p, FILE *pf, unsigned tamInfo);
+int cargarArchivoBinOrdenadoArbolBinBusq(tArbolBinBusq * p, const char * path, unsigned tamInfo);
+int cargarDesdeDatosOrdenadosArbolBinBusq(tArbolBinBusq *p,void *ds, unsigned cantReg,unsigned (*leer)(void **, void *, unsigned, void *params),void * params);
+int mayorElemNoClaveArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam,	int (*cmp)(const void *, const void *));
+int menorElemNoClaveArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam,	int (*cmp)(const void *, const void *));
+int buscarElemNoClaveArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam, int (*cmp)(const void *, const void *));
+
+///Utils
+unsigned alturaArbolBin(const tArbolBinBusq *p);
+unsigned cantNodosArbolBin(const tArbolBinBusq *p);
+unsigned cantNodosHastaNivelArbolBin(const tArbolBinBusq *p, int n);
+int mayorElemArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam);
+int menorElemArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam);
+int esCompletoArbolBin(const tArbolBinBusq *p);
+int esBalanceadoArbolBin(const tArbolBinBusq *p);
+int esAVLArbolBin(const tArbolBinBusq *p);
+int esCompleto2ArbolBin(const tArbolBinBusq *p); int esBalanceado2ArbolBin(const tArbolBinBusq *p);
+int esAVL2ArbolBin(const tArbolBinBusq *p);
 
 #endif // FUNCIONES_H_INCLUDED
