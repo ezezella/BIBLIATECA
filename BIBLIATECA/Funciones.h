@@ -38,10 +38,12 @@
 #define NO 0
 #define CADENA_VACIA 8
 #define SIN_INICIALIZAR 10
+#define VERDADERO 1
+#define FALSO 0
 ///-----FUNCIONES EN MACRO-----
 #define MINIMO(x,y) (x<=y)? x:y
 #define MAXIMO(x,y) (x<=y)? y:x
-#define ES_LETRA(x) ((x>='a' && x<='z') || (x>='A' && x<='Z'))
+#define ES_LETRA(i) ((i>='A' && i<='Z') || (i>='a' && i<='z') || (i>=160 && i<=165)|| (i==129) || (i==130) || (i==181) || (i==233) || (i==224) || (i==144) || (i==214))
 #define ES_BLANCO(x) ((x==' ')||(x=='\t'))
 #define ES_NUMERO(x) ((x>='0' && x<='9'))
 #define ES_MAYUSCULA(c) (((c)>='A') && ((c)<='Z'))
@@ -117,6 +119,8 @@ int AumentaSueldos(const char* arch1,const char* arch2);///arch1 = alumno    arc
 ///--------------------- A R C H I V O S   D E  T E X T O ---------------------
 
 int ofuscado();
+int eliminarYMostrarRepetidos_MIO(tLista *p, FILE *fpPant,int comparar(const void *, const void *),void mostrar(const void *, FILE *));
+int eliminarYMostrarUnicos_MIO(tLista *p, FILE *fpPant,int comparar(const void *, const void *),void mostrar(const void *, FILE *));
 
 ///--------------------- F E C H A ---------------------
 
@@ -175,6 +179,7 @@ int contarPalabras(const char* cad);
 int vecesRepite(const char* pal, const char* cad);  /// ----------
 int mi_ctoi(char c);
 char *mi_strcpy(char *cad_copia, const char *cad_orig);
+int buscarYReemplazar_MIO(char *cade, int tam,const char *busc, const char *reem);
 
 ///--------------------- P I L A   E S T A T I C A ---------------------
 
@@ -256,6 +261,7 @@ int sacarUltimoLista(t_lista *l, void *d, unsigned cantBytes);
 int verUltimoLista(const t_lista *l, void *d, unsigned cantBytes);
 int	ponerEnOrden(t_lista *p, const void *d, unsigned cantBytes,int (*comparar)(const void *, const void *),int (*acumular)(void **, unsigned *, const void *, unsigned));
 void ordenar(t_lista *p, int (*comparar)(const void *, const void *));
+int mostrarLista(const tLista *p,void (*mostrar)(const void *, FILE *), FILE *fp);
 
 ///--------------------- P I L A   C I R C U L A R ---------------------
 
@@ -281,15 +287,37 @@ int cola_vacia_cir(const tCola *pc);
 void vaciar_cola_cir(tCola *pc);
 int ver_primero_cir(const tCola *pc, void *info, unsigned tamInfo);
 
-///--------------------- L I S T A   C I R C U L A R --------------------- VER
-
-
 
 ///--------------------- L I S T A   D O B L E ---------------------
 
+typedef struct sNodoDoble
+{
+    void *pInfo;
+    unsigned tamElem;
+    struct sNodoDoble *ant;
+    struct sNodoDoble *sig;
+}tNodoDoble;
 
+typedef tNodoDoble* tListaDoble;
+typedef int(*tCmp)(const void*, const void*);
+typedef void(*tMostrar)(const void*);
 
-///--------------------- L I S T A   D O B L E ---------------------
+void crearListaDoble(tListaDoble*);
+int listaDobleVacia(const tListaDoble*);
+int listaDobleLlena(const tListaDoble*, unsigned);
+void vaciarListaDoble(tListaDoble*);
+void vaciarListaDobleYMostrar(tListaDoble*, tMostrar);
+int insertarPrincipioListaDoble(tListaDoble*, void*, unsigned);
+int insertarFinalListaDoble(tListaDoble*, void*, unsigned);
+int insertarOrdenadoListaDoble(tListaDoble*, void*, unsigned, tCmp);
+int verPrimeroListaDoble(tListaDoble*, void*, unsigned);
+int verUltimoListaDoble(tListaDoble*, void*, unsigned);
+int sacarPrimeroListaDoble(tListaDoble*, void*, unsigned);
+int sacarUltimoListaDoble(tListaDoble*, void*, unsigned);
+int buscarYSacarListaDoble(tListaDoble*, void*, unsigned, tCmp);
+void mostrarListaDoble(tListaDoble*, tMostrar);
+
+///--------------------------- A R B O L ----------------------------
 
 #define reservarMemoriaNodo( X , Y , Z , W ) ((( X ) = (typeof( X ))malloc( Y ) ) == NULL || ((Z) = malloc( W ) ) == NULL ? free( X ), 0 : 1	)
 

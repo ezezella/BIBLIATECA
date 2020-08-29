@@ -394,6 +394,95 @@ int ofuscado(char* nombarch)
     return TODO_OK;
 }
 
+//////////////////////////////////////////////
+
+int eliminarYMostrarRepetidos_MIO(tLista *p, FILE *fpPant,int comparar(const void *, const void *),void mostrar(const void *, FILE *))
+{
+    tNodo* p_busq;
+    tNodo* p_busq_ant=NULL;
+    tNodo* p_principio=*p;
+    tNodo* p_elim;
+    int cont=0;
+    mostrar(NULL,fpPant);
+    tFinal dni_a_elim;
+    while(p_principio!=NULL)
+    {
+        p_busq=p_principio;                                                     ///pbusq se pone en el principio desde donde voy a recorrer eliminando
+        if(contarApariciones(p_principio,comparar)>1)                           ///si tiene mas de una aparicion, se elimina
+        {
+            dni_a_elim=*((tFinal*)(p_principio->info));                         ///dni a eliminar
+            while(p_busq!=NULL)                                                 ///hasta q pbusq no llegue al final no termino
+            {
+                if(comparar(&dni_a_elim,p_busq->info)==0)                       ///si son iguales procedo a eliminar
+                {
+                    cont++;                                                     ///sumo 1
+                    if(p_busq!=(*p))                                            ///si es el primero de la lista, no tiene enganche
+                        p_busq_ant->sig=p_busq->sig;                            ///engancho
+                    if(p_busq==(*p))                                            ///si es el primero de la lista, tengo q mover el puntero lista
+                        *p=p_busq->sig;                                          ///muevo puntero lista
+                    if(p_busq==p_principio)                                     ///si estoy eliminando el del principio, muevo el principio
+                        p_principio=p_principio->sig;                           ///muevo
+                    p_elim=p_busq;                                              ///determino en pelim el q voy a eliminar
+                    p_busq=p_busq->sig;                                         ///avanzo pbusq (pbusq ant sigue donde esta)
+                    mostrar(p_elim->info,fpPant);                               ///muestro
+                    free(p_elim->info);                                         ///libero
+                    free(p_elim);                                               ///libero
+                }
+                else
+                {
+                    p_busq_ant=p_busq;                                          ///no es el dato a eliminar, avanzo
+                    p_busq=p_busq->sig;                                         ///no es el dato a eliminar, avanzo
+                }
+            }
+        }
+        else
+        {
+            p_busq_ant=p_principio;
+            p_principio=p_principio->sig;                                       ///no aparece mas de una vez, avanzo
+        }
+    }
+    return cont;
+}
+
+//////////////////////////////////////////////
+
+int eliminarYMostrarUnicos_MIO(tLista *p, FILE *fpPant,int comparar(const void *, const void *),void mostrar(const void *, FILE *))
+{
+    tNodo* p_busq=(*p)->sig;
+    tNodo* p_busq_izq;
+    tNodo* p_elim=*p;
+    int cont=0;
+    mostrar(NULL,fpPant);
+    while(p_elim!=NULL)
+    {
+        p_busq_izq=*p;
+        while(p_busq!=NULL && comparar(p_elim->info,p_busq->info)!=0)
+            p_busq=p_busq->sig;                       ///avanzo
+        if(p_busq==NULL)
+            while(p_busq_izq->sig!=p_elim && comparar(p_elim->info,p_busq_izq->info)!=0)
+                p_busq_izq=p_busq_izq->sig;
+
+        if(p_busq==NULL && (p_busq_izq->sig==p_elim||p_busq_izq==p_elim))  ///ELIMINA
+        {
+            mostrar(p_elim->info,fpPant);            ///muestra
+            if(p_busq_izq!=p_elim)
+                p_busq_izq->sig=p_elim->sig;         ///engancho
+            if(*p==p_elim)
+                *p=(*p)->sig;
+            p_busq=p_elim->sig;
+            free(p_elim->info);                      ///libreo
+            free(p_elim);                            ///libero
+            p_elim=p_busq;
+            cont++;                                  ///cuento
+        }
+        else
+            p_elim=p_elim->sig;
+        if(p_elim)
+            p_busq=p_elim->sig;
+    }
+    return cont;
+}
+
 
 ///----------------------------- F E C H A ----------------------------------
 
@@ -710,6 +799,52 @@ int suma_tri_sup(int mat[][COL])
         for(j=i+1; j<COL; j++)
             sum+=mat[i][j];
     return sum;
+}
+
+//////////////////////////////////////////////
+
+void rotarMat180_MIO(int m[][COLUM], int filas, int colum)
+{
+    int i,j,aux;
+    for(i=0; i<filas/2; i++)
+        for(j=0; j<colum; j++)
+        {
+            aux=m[i][j];
+            m[i][j]=m[filas-i-1][colum-j-1];
+            m[filas-i-1][colum-j-1]=aux;
+        }
+    if(filas%2!=0)
+        for(j=0; j<colum/2; j++)
+        {
+            aux=m[i][j];
+            m[i][j]=m[filas-i-1][colum-j-1];
+            m[filas-i-1][colum-j-1]=aux;
+        }
+}
+
+//////////////////////////////////////////////
+
+void rotarMat90(int m[][TAM_MAT], int filas, int colum)
+{
+    printf("\n\n");
+    int i,j,aux;
+    for(i=0; i<filas/2; i++)
+        for(j=0; j<colum; j++)
+        {
+            aux=m[i][j];
+            m[i][j]=m[filas-i-1][j];
+            m[filas-i-1][j]=aux;
+        }
+
+    ///----------------------------
+
+    for(i=0; i<=filas-2; i++)
+        for(j=0; j<=colum-i-2; j++)
+        {
+            aux=m[i][j];
+            m[i][j]=m[filas-j-1][colum-1-i];
+            m[filas-j-1][colum-1-i]=aux;
+        }
 }
 
 //////////////////////////////////////////////
@@ -1142,9 +1277,7 @@ char* primeraPalabra(const char* cad)
     char* j=r;
     char* i=(char*)cad;
     while(*i<'A' || (*i>'Z' && *i<'a') || *i>'z')
-    {
         i++;
-    }
     while((*i>='A' && *i<='Z') || (*i>='a' && *i<='z'))
     {
         *j=*i;
@@ -1160,17 +1293,17 @@ char* primeraPalabra(const char* cad)
 int contarPalabras(const char* cad)
 {
     int cont=0;
-    char* i=(char*)cad;
-    while(*i)
+    char* pcad=(char*)cad;
+    while(*pcad!='\0')
     {
-        if(((*i>='A' && *i<='Z') || (*i>='a' && *i<='z')))
+        if(ES_LETRA(*pcad))
         {
-            while(((*i>='A' && *i<='Z') || (*i>='a' && *i<='z')))
-                i++;
+            while(ES_LETRA(*pcad))
+                pcad++;
             cont++;
         }
-        if(*i)
-            i++;
+        if(*pcad)
+            pcad++;
     }
     return cont;
 }
@@ -1199,6 +1332,57 @@ int vecesRepite(const char* pal,const char* cad)
     return cont;
 }
 
+int contarOcurrencias1_MIO(const char *cad, const char *sub)///anana = 2 veces ana
+{
+    if(*sub=='\0')
+        return 1;
+    char* subp = (char*) sub;
+    char* cadp = (char*) cad;
+    char* cadpini;
+    int cont=0;
+    while(*cadp!='\0')
+    {
+        while(MAY_A_MIN(*cadp)!=MAY_A_MIN(*subp)&&*cadp!='\0')
+            cadp++;
+        cadpini=cadp;
+        cadpini++;
+        while(MAY_A_MIN(*cadp)==MAY_A_MIN(*subp)&&*cadp!='\0')
+        {
+            cadp++;
+            subp++;
+        }
+        if(*subp=='\0')
+        {
+            cont++;
+            cadp=cadpini;
+        }
+        subp=(char*)sub;
+    }
+    return cont;
+}
+
+int contarOcurrencias2_MIO(const char *cad, const char *sub) ///anana = 1 vez ana
+{
+    if(*sub=='\0')
+        return 1;
+    char* palp = (char*) sub;
+    char* cadp = (char*) cad;
+    int cont=0;
+    while(*cadp!='\0')
+    {
+        while(MAY_A_MIN(*cadp)!=MAY_A_MIN(*palp) && *cadp!='\0')
+            cadp++;
+        while(MAY_A_MIN(*cadp)==MAY_A_MIN(*palp) && *cadp!='\0')
+        {
+            cadp++;
+            palp++;
+        }
+        if(*palp=='\0')
+            cont++;
+        palp=(char*)sub;
+    }
+    return cont;
+}
 //////////////////////////////////////////////
 
 int mi_ctoi(char c)
@@ -1221,6 +1405,164 @@ char *mi_strcpy(char *cad_copia, const char *cad_orig)
     return cad_copia;
 }
 
+//////////////////////////////////////////////
+
+int palabramaslarga(const char* cad)
+{
+    int tampal=0;
+    int cont=0;
+    char* pcad=(char*)cad;
+    while(*pcad!='\0')
+    {
+        if(ES_LETRA(*pcad))
+        {
+            while(ES_LETRA(*pcad))
+            {
+                pcad++;
+                cont++;
+            }
+            if(cont>tampal)
+                tampal=cont;
+            cont=0;
+        }
+        if(*pcad)
+            pcad++;
+    }
+    return tampal;
+}
+
+//////////////////////////////////////////////
+
+int buscar_Y_Reemplazar(char *cade, int tam,const char *busc, const char *reem)
+{
+    char* inireem=(char*)reem;
+    char* inibusc=(char*)busc;
+    char* inicade=(char*)cade;
+    char* fincade=(char*)cade;
+    char* fincadecopiar;
+    int masomenos;
+    char* fincadepegar;
+    int cantpalbusc=0, cantpalreemp=0, cantpalcade=0, cantveces=0;
+
+    while(*fincade!='\0')
+        fincade++;
+
+    while(*busc!='\0')
+    {
+        busc++;
+        cantpalbusc++;
+    }
+    busc=inibusc;
+
+    while(*reem!='\0')
+    {
+        reem++;
+        cantpalreemp++;
+    }
+    reem=inireem;
+
+    while(*cade!='\0')
+    {
+        cade++;
+        cantpalcade++;
+    }
+    cade=inicade;
+    int diferencia=cantpalreemp-cantpalbusc;
+
+    ///vamo a lo importante
+    while(*cade!='\0')
+    {
+        while(tolower(*cade)==tolower(*busc) && *busc!='\0')
+        {
+            busc++;
+            cade++;
+        }
+        if(*busc=='\0' && cantpalcade+diferencia<=tam)
+        {
+            cantveces++;
+            cantpalcade+=diferencia;
+            if(diferencia>0)
+            {                           ///en cade voy a empezar a poner letra x letra una vez mueva todo hacia la derecha
+                fincadecopiar=fincade;
+                fincade+=diferencia;
+                fincadepegar=fincade;
+                masomenos=-1;
+            }
+            else
+            {
+                fincadecopiar=cade;
+                fincadepegar=cade+diferencia;
+                masomenos=1;
+            }
+            while((masomenos==1&&*(fincadecopiar-1)!='\0')||(masomenos==-1&&fincadecopiar!=cade-1))///muevo todo x cantidad de lugares hacia la derecha o izquierda
+            {
+                *fincadepegar=*fincadecopiar;
+                fincadecopiar+=masomenos;
+                fincadepegar+=masomenos;
+            }
+            cade-=cantpalbusc;
+            while(*reem!='\0')
+            {
+                *cade=*reem;
+                cade++;
+                reem++;
+            }
+            reem=inireem;
+        }
+        else if(cantpalcade+diferencia>tam)
+            return -(cantveces+1);
+        busc=inibusc;
+        cade++;
+    }
+    return cantveces;
+}
+
+//////////////////////////////////////////////
+
+int contarletras(const char* cad)
+{
+    int cont=0;
+    char* mov=(char*)cad;
+    while(*mov!='\0')
+    {
+        if(ES_LETRA(*mov))
+            cont++;
+        mov++;
+    }
+    return cont;
+}
+
+//////////////////////////////////////////////
+
+int contarapariciones(char carac,char* caden)
+{
+    int cont=0;
+    while(*caden!='\0')
+    {
+        if(My_toupper(*caden)==carac)
+            cont++;
+        caden++;
+    }
+    return cont;
+}
+
+//////////////////////////////////////////////
+
+int esAnagrama(const char *s1, const char *s2)
+{
+    char* cad1=(char*)s1;
+    if(contarletras(s1)==contarletras(s2))
+        while(*cad1!='\0')
+        {
+            if(ES_LETRA(*cad1)&&
+                    contarapariciones(My_toupper(*cad1),(char*)s1)!=contarapariciones(My_toupper(*cad1),(char*)s2))
+                return 0;
+            cad1++;
+        }
+    else
+        return 0;
+    return 1;
+}
 
 ///----------------------------- P I L A   E S T A T I C A ----------------------------------
 
@@ -1741,6 +2083,20 @@ void ordenar(t_lista *p, int (*comparar)(const void *, const void *))
     }
 }
 
+int mostrarLista(const tLista *p,void (*mostrar)(const void *, FILE *), FILE *fp)
+{
+    int cont=0;
+    mostrar(NULL,fp);
+    while(*p)
+    {
+        mostrar((*p)->info,fp);
+        cont++;
+        p=&(*p)->sig;
+    }
+    return cont;
+}
+
+
 
 ///----------------------------- P I L A   C I R C U L A R ----------------------------------
 
@@ -1837,7 +2193,7 @@ void vaciar_pila_cir(tPila*p)
 }
 
 
-///----------------------------- P I L A   C I R C U L A R ----------------------------------
+///----------------------------- C O L A   C I R C U L A R ----------------------------------
 
 
 void crearCola_cir(tCola *pc)
@@ -1936,6 +2292,298 @@ int ver_primero_cir(const tCola *pc, void *info, unsigned tamInfo)
 ///----------------------------- L I S T A   D O B L E ----------------------------------
 
 
+void crearListaDoble(tListaDoble *l)
+{
+    *l = NULL;
+}
+
+////////////////////////////////////////////////
+
+int listaDobleVacia(const tListaDoble *l)
+{
+    return *l == NULL;
+}
+
+////////////////////////////////////////////////
+
+int listaDobleLlena(const tListaDoble *l, unsigned tamElem)
+{
+    tNodoDoble *aux = (tNodoDoble*)malloc(sizeof(tNodoDoble));
+    void *info = malloc(tamElem);
+    free(aux);
+    free(info);
+    return aux == NULL || info == NULL;
+}
+
+////////////////////////////////////////////////
+
+void vaciarListaDoble(tListaDoble *l)
+{
+    while((*l)->ant)
+        *l = (*l)->ant;
+    while(*l)
+    {
+        tNodoDoble *aux = *l;
+        *l = aux->sig;
+        free(aux->pInfo);
+        free(aux);
+    }
+}
+
+////////////////////////////////////////////////
+
+void vaciarListaDobleYMostrar(tListaDoble *l, tMostrar mostrar)
+{
+    int i=1;
+    while((*l)->ant)
+        *l = (*l)->ant;
+    while(*l)
+    {
+        tNodoDoble *aux = *l;
+        *l = aux->sig;
+        printf("Nodo %d: ",i);
+        mostrar(aux->pInfo);
+        free(aux->pInfo);
+        free(aux);
+        i++;
+    }
+}
+
+////////////////////////////////////////////////
+
+int insertarPrincipioListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem)
+{
+    tNodoDoble *nue = (tNodoDoble*)malloc(sizeof(tNodoDoble));
+    tNodoDoble *act = *l;
+    if(act)
+    {
+        while(act->ant)
+        act = act->ant;
+    }
+    if(!nue)
+    {
+        printf("Sin memoria.\n");
+        return SIN_MEMORIA;
+    }
+    nue->pInfo = malloc(tamElem);
+    if(!nue->pInfo)
+    {
+        free(nue);
+        printf("Sin memoria.\n");
+        return SIN_MEMORIA;
+    }
+    memcpy(nue->pInfo,pInfo,tamElem);
+    nue->ant = NULL;
+    nue->sig = act;
+    nue->tamElem = tamElem;
+    if(act)
+        act->ant = nue;
+    else
+        *l = nue;
+    return VERDADERO;
+}
+
+////////////////////////////////////////////////
+
+int insertarFinalListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem)
+{
+    tNodoDoble *nue = (tNodoDoble*)malloc(sizeof(tNodoDoble));
+    tNodoDoble *act = *l;
+    if(act)
+    {
+        while(act->sig)
+        act = act->sig;
+    }
+    if(!nue)
+    {
+        printf("Sin memoria.\n");
+        return SIN_MEMORIA;
+    }
+    nue->pInfo = malloc(tamElem);
+    if(!nue->pInfo)
+    {
+        printf("Sin memoria.\n");
+        free(nue);
+        return SIN_MEMORIA;
+    }
+    memcpy(nue->pInfo,pInfo,tamElem);
+    nue->tamElem = tamElem;
+    nue->ant = act;
+    nue->sig = NULL;
+    if(act)
+        act->sig = nue;
+    else
+        *l = nue;
+    return VERDADERO;
+
+}
+
+////////////////////////////////////////////////
+
+int insertarOrdenadoListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem, tCmp comparar)
+{
+    tNodoDoble *act,*nueant,*nuesig,*nue;
+    act=(*l);
+    if(act)
+    {
+        while(act->ant && comparar(pInfo,act->pInfo)<0)
+            act=act->ant;
+        while(act->sig && comparar(pInfo,act->pInfo)>0)
+            act=act->sig;
+        if(comparar(pInfo,act->pInfo)>0)
+        {
+            nueant=act;
+            nuesig=act->sig;
+        }
+        else
+        {
+            nueant=act->ant;
+            nuesig=act;
+        }
+    }
+    else
+    {
+        nueant=NULL;
+        nuesig=NULL;
+    }
+    nue=(tNodoDoble*)malloc(sizeof(tNodoDoble));
+    if(!nue)
+    {
+        printf("Sin memoria.\n");
+        return FALSO;
+    }
+    nue->pInfo = malloc(tamElem);
+    if(!nue->pInfo)
+    {
+        free(nue);
+        printf("Sin memoria.\n");
+        return FALSO;
+    }
+    memcpy(nue->pInfo,pInfo,tamElem);
+    nue->tamElem = tamElem;
+    nue->ant=nueant;
+    nue->sig=nuesig;
+    if(nueant) nueant->sig=nue;
+    if(nuesig) nuesig->ant=nue;
+    (*l)=nue;
+    return VERDADERO;
+}
+
+////////////////////////////////////////////////
+
+int verPrimeroListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem)
+{
+    if(!*l)
+        return FALSO;
+    while((*l)->ant)
+        *l = (*l)->ant;
+    memcpy(pInfo,(*l)->pInfo,MINIMO(tamElem,(*l)->tamElem));
+    return VERDADERO;
+}
+
+////////////////////////////////////////////////
+
+int verUltimoListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem)
+{
+    if(!*l)
+        return FALSO;
+    while((*l)->sig)
+        *l = (*l)->sig;
+    memcpy(pInfo,(*l)->pInfo,MINIMO(tamElem,(*l)->tamElem));
+    return VERDADERO;
+}
+
+////////////////////////////////////////////////
+
+int sacarPrimeroListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem)
+{
+    if(!*l)
+        return FALSO;
+    tNodoDoble *elim = *l, *elimSig;
+    while(elim->ant)
+        elim = elim->ant;
+    elimSig = elim->sig;
+    if(elim == *l)
+        *l = elimSig;
+    if(elimSig)
+            elimSig->ant = NULL;
+    memcpy(pInfo,elim->pInfo,MINIMO(tamElem,elim->tamElem));
+    free(elim->pInfo);
+    free(elim);
+    return VERDADERO;
+}
+
+////////////////////////////////////////////////
+
+int sacarUltimoListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem)
+{
+    if(!*l)
+        return FALSO;
+    tNodoDoble *elim = *l, *elimAnt;
+    while(elim->sig)
+        elim = elim->sig;
+    elimAnt = elim->ant;
+    if(elim == *l)
+        *l = elimAnt;
+    if(elimAnt)
+            elimAnt->sig = NULL;
+    memcpy(pInfo,elim->pInfo,MINIMO(tamElem,elim->tamElem));
+    free(elim->pInfo);
+    free(elim);
+    return VERDADERO;
+}
+
+////////////////////////////////////////////////
+
+int buscarYSacarListaDoble(tListaDoble *l, void *pInfo, unsigned tamElem, tCmp comparar)
+{
+    tNodoDoble *act = *l,*ant,*aux;
+    if(act)
+    {
+        while(act->sig && comparar(pInfo, act->pInfo) > 0)
+            act = act->sig;
+        while(act->ant&& comparar(pInfo, act->pInfo) < 0)
+            act = act->ant;
+        if(!comparar(pInfo, act->pInfo))
+        {
+            aux = act;
+            memcpy(pInfo,aux->pInfo,MINIMO(tamElem,aux->tamElem));
+            ant = act->ant;
+            act = act->sig;
+            if(ant)
+                ant->sig = act;
+            if(act)
+                act->ant = ant;
+            if((act && !ant) || (act && ant))
+                *l = act;
+            else
+            {
+                if((!act && ant))
+                    *l = ant;
+                else
+                    *l = NULL;
+            }
+            free(aux);
+            return VERDADERO;
+        }
+    }
+    return FALSO;
+}
+
+////////////////////////////////////////////////
+
+void mostrarListaDoble(tListaDoble *l, tMostrar mostrar)
+{
+    while((*l)->ant)
+        *l = (*l)->ant;
+    while(*l)
+    {
+        mostrar((*l)->pInfo);
+        l = &(*l)->sig;
+    }
+}
+
+
 ///---------------------------------- A R B O L --------------------------------------
 
 
@@ -1971,8 +2619,7 @@ int	insertarArbolBinBusq(tArbolBinBusq *p, const void *d, unsigned tam, int (*cm
 
 ////////////////////////////////////////////////
 
-int	insertarRecArbolBinBusq(tArbolBinBusq *p, const void *d, unsigned tam,
-                            int (*cmp)(const void *, const void *))
+int	insertarRecArbolBinBusq(tArbolBinBusq *p, const void *d, unsigned tam,int (*cmp)(const void *, const void *))
 {
     tNodoArbol *nue;
     int	rc;
@@ -2197,8 +2844,7 @@ int cargarArchivoBinOrdenadoAbiertoArbolBinBusq(tArbolBinBusq * p, FILE * pf,uns
 
 int cargarArchivoBinOrdenadoArbolBinBusq(tArbolBinBusq * p, const char * path,unsigned tamInfo)
 {
-    int cantReg,
-        r;
+    int cantReg,r;
     FILE * pf;
     if(*p)
         return SIN_INICIALIZAR;
